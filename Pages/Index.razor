@@ -1,0 +1,60 @@
+﻿@page "/"
+@using Scoreboard.Pages.Models;
+
+@using System.Net.Http
+@using System.Net.Http.Headers
+@inject HttpClient Http
+
+<h1>My Score Board</h1>
+<section class="teams">
+  @foreach(var team in teams)
+  {
+<section class="team one">
+    <section>
+      <h2 class="team-1-name">@team.Name</h2>
+      <p class="team-1-score">@team.Score</p>
+    </section>
+    <section>
+      <section>
+        update team 1 name
+        <input type="text" class="team-1-input" @bind="@team.Name" />
+        <button class="update-team-1-name">Update</button>
+      </section>
+      <section>
+        update team 1 score
+        <button class="team-1-add-1-button" @onclick="@(() => team.UpdateScore(1))">add 1</button>
+        <button class="team-1-subtract-1-button" @onclick="@(() => team.UpdateScore(-1))">subtract 1</button>
+      </section>
+    </section>
+  </section>
+  
+  }
+
+
+</section>
+  <p>and the winner is @Thing.Answer </p>
+<ul>
+  @foreach(var cat in Cats.Data){
+    <li>
+      @cat.Name
+    </li>
+  }
+  </ul>
+@code {
+
+  List<Team> teams = new List<Team>
+  {
+      new Team{Name = "BobCats"},
+      new Team{Name = "Twisters"}
+  };
+
+  public YesNoModel Thing {get;set;} = new YesNoModel();
+
+  public CatData Cats {get;set;} = new CatData();
+
+    protected override async Task OnInitAsync() {
+        Thing = await Http.GetJsonAsync<YesNoModel>("https://yesno.wtf/api");
+        Cats = await Http.GetJsonAsync<CatData>("https://sdg-octodex.herokuapp.com/");
+    }
+}
+
